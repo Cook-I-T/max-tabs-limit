@@ -1,6 +1,6 @@
 {
-  "description": "Limit the number of tabs that can be opened",
-  "homepage_url": "https://github.com/gebirgsbaerbel/max-tabs-limit",
+  "description": "Configurable limit of tabs that can be opened",
+  "homepage_url": "https://github.com/Cook-I-T/max-tabs-limit",
   "manifest_version": 2,
   "name": "MaxTabsLimit",
   "permissions": [
@@ -21,9 +21,13 @@
         "32": "tab.svg"
     }
   },
-  "version": "1.23",
+  "version": "1.0.0",
   "browser_specific_settings": {
     "gecko": {
+      "id": "maxtablimit@cook_it",
+      "data_collection_permissions": {
+        "required": ["none"]
+      },
       "strict_min_version": "57.0a1"
     }
   },

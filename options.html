@@ -6,15 +6,37 @@
   </head>
 
   <body>
+    <p id="lockText" hidden>Settings are locked by your organization!</p>
     <form>
       <hr/>
       <div>
         <label>Max Tabs</label>
-        <input type="number" id="maxTabs"/>
+        <input type="number" id="maxTabs" min="1"/>
       </div>
       <hr/>
       <div>
-        <button type="submit">Save</button>
+        <p>Remaining Tabs badge format:</p>
+        <input type="radio" id="openTabs" name="badgeFormat" value="openTabs" checked>
+        <label for="openTabs">Amount of open Tabs (Example: 4)</label><br>
+        <input type="radio" id="remainingTabs" name="badgeFormat" value="remainingTabs">
+        <label for="remainingTabs">Amount of Tabs remaining (Example: 2)</label><br>
+        <input type="radio" id="openTabsMax" name="badgeFormat" value="openTabsMax">
+        <label for="openTabsMax">Amount of open Tabs + maximum Tabs (For under 10 max tabs, example: 4/8)</label><br>
+        <input type="radio" id="remainingTabsMax" name="badgeFormat" value="remainingTabsMax">
+        <label for="remainingTabsMax">Amount of Tabs remaining + maximum Tabs (For under 10 max tabs, example: 2/5)</label>
+      </div>
+      <hr/>
+      <div>
+        <label>Error Message Title (leave empty for no notification)</label>
+        <input type="text" maxlength="40" size="20" id="errorTitle"/>
+      </div>
+      <div>
+        <label>Error Message Content</label><br>
+        <input type="text" maxlength="150" size="60" id="errorContent"/>
+      </div>
+      <hr/>
+      <div>
+        <button type="submit" id="submit">Save</button>
       </div>
     </form>
     <script src="options.js"></script>
