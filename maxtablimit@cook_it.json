@@ -8,6 +8,7 @@
     errorTitle: Error!,                                         //Title of notification
     errorContent: Too many Tabs! Maximum of {maxTabs} allowed!, //Content of notification
     lockText: <b>Locked by admin!</b>                           //Text displayed in the settings when they are locked. This is set with .innerHTML so styling is possible
+                                                                //Allowed HTML elements: "#text", "style", "h1-6", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark"
   }",
   "type": "storage",
   "data": {

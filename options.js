@@ -24,7 +24,19 @@ async function updateUI() {
   if (currentSettings["locked"] === true) {
     allFormElementIDs.forEach(key=>{document.getElementById(key).setAttribute('disabled', '')});
     if (currentSettings["lockText"] != "" && typeof currentSettings["lockText"] == "string") {
-      document.getElementById("lockText").innerHTML = currentSettings["lockText"];
+      //since this should only ever be set by an administrator using managed storage we trust that they know what they do.
+      //AMO complains I so guess I'll restrict the allowed elements to style elements.
+      //This hack is almost certainly not safe and I could've just used .innerText but eh...
+      const validElements = ["#text", "style", "h1", "h2", "h3", "h4", "h5", "h6", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark"];
+      let doc = new DOMParser().parseFromString(currentSettings["lockText"], "text/html");
+      let isValid = !Array.from(doc.body.childNodes).concat(Array.from(doc.head.childNodes)).some((node) => {
+          if (validElements.includes(node.nodeName.toLowerCase())) {return false} else {return true}
+        });
+      if (isValid) {
+        document.getElementById("lockText").innerHTML = currentSettings["lockText"];
+      } else {
+        console.error("lockText in managed storage seems to contain a disallowed element, please check the config")
+      }
     }
     document.getElementById("lockText").hidden = false;
   }
