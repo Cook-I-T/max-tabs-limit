@@ -1,3 +1,4 @@
+[<img src="https://raw.githubusercontent.com/Cook-I-T/max-tabs-limit/master/no-ai_custom.svg?sanitize=true&raw=true" width="69" height="20"/>](https://samvieten.itch.io/no-ai)
 ## What is changed in this fork?
 
 "Too many tabs" error notification is customizable, badge can switch between different counting modes and it supports managed storage for rollouts via policy ([Example file](maxtablimit@cook_it.json)).
