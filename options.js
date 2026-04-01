@@ -27,6 +27,7 @@ async function updateUI() {
       //since this should only ever be set by an administrator using managed storage we trust that they know what they do.
       //AMO complains I so guess I'll restrict the allowed elements to style elements.
       //This hack is almost certainly not safe and I could've just used .innerText but eh...
+      //-AMO still complains, but I decided to be at peace with the warning. I know what I do, I think?
       const validElements = ["#text", "style", "h1", "h2", "h3", "h4", "h5", "h6", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark"];
       let doc = new DOMParser().parseFromString(currentSettings["lockText"], "text/html");
       let isValid = !Array.from(doc.body.childNodes).concat(Array.from(doc.head.childNodes)).some((node) => {
