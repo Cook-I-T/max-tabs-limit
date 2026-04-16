@@ -11,10 +11,8 @@ var allFormElementIDs = ['maxTabs', 'openTabs', 'remainingTabs', 'openTabsMax', 
 async function updateUI() {
   //Copy local storage to variable, make sure it's done by using for loop with await as .forEach doesn't (a)wait
   await browser.storage.local.get().then(data => {localArr = Object.keys(data);});
-  for (const key of localArr) {
-    await writeLocalToVariable(key);
-  }
-
+  //make use of async, use Promise.all instead of a naive for loop.
+  await Promise.all(localArr.map(async (key) => writeLocalToVariable(key)));
   //Fill the form, it being async is not a problem
   valueFormElementIDs.forEach(key=>{document.getElementById(key).value = currentSettings[key]});
   //Select the correct radio button
@@ -25,13 +23,15 @@ async function updateUI() {
     allFormElementIDs.forEach(key=>{document.getElementById(key).setAttribute('disabled', '')});
     if (currentSettings["lockText"] != "" && typeof currentSettings["lockText"] == "string") {
       //since this should only ever be set by an administrator using managed storage we trust that they know what they do.
+      //Of course not closing a tag would mess everything else on the page up, but thats an obvious and non-critical issue.
       //AMO complains I so guess I'll restrict the allowed elements to style elements.
       //This hack is almost certainly not safe and I could've just used .innerText but eh...
       //-AMO still complains, but I decided to be at peace with the warning. I know what I do, I think?
       const validElements = ["#text", "style", "h1", "h2", "h3", "h4", "h5", "h6", "b", "em", "i", "small", "strong", "sub", "sup", "ins", "del", "mark"];
       let doc = new DOMParser().parseFromString(currentSettings["lockText"], "text/html");
+      //If an element is not in the whitelist, it returns true, which makes the whole .some return true which is negated into false.
       let isValid = !Array.from(doc.body.childNodes).concat(Array.from(doc.head.childNodes)).some((node) => {
-          if (validElements.includes(node.nodeName.toLowerCase())) {return false} else {return true}
+          return !validElements.includes(node.nodeName.toLowerCase());
         });
       if (isValid) {
         document.getElementById("lockText").innerHTML = currentSettings["lockText"];

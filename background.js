@@ -30,17 +30,14 @@ async function loadStorageValues() {
     //if locked overwrite instead of add
     if (result.locked === true) {
       //Can't use .forEach as that causes some async shenanigans because await does not work on it
-      for (const key of managArr) {
-        await writeManagedToLocal(key);
-      }
+      //make use of async instead by using Promise.all instead of a naive for loop.
+      await Promise.all(managArr.map(async (key) => writeManagedToLocal(key)));
     } else {
       //filter out already existing keys
       let toRemove = new Set(localArr);
       let toSet = managArr.filter( x => !toRemove.has(x) );
       //only set variables not already set
-      for (const key of toSet) {
-        await writeManagedToLocal(key);
-      }
+      await Promise.all(toSet.map(async (key) => writeManagedToLocal(key)));
     }
   }
   //lastly always add the default values to ensure nothing required stays empty
@@ -49,15 +46,11 @@ async function loadStorageValues() {
   //filter out already existing keys
   let toRemove = new Set(localArr);
   let toSet = Object.keys(defaultSettings).filter( x => !toRemove.has(x) );
-  for (const key of toSet) {
-    await browser.storage.local.set({[key]: defaultSettings[key]});
-  }
+  await Promise.all(toSet.map(async (key) => browser.storage.local.set({[key]: defaultSettings[key]})));
 
   //Copy entire local storage to variable for easy non-async access
-  await browser.storage.local.get().then(data => {localArr = Object.keys(data);});
-  for (const key of localArr) {
-    await writeLocalToVariable(key);
-  }
+  await browser.storage.local.get().then(data => {localArr = Object.keys(data)});
+  await Promise.all(localArr.map(async (key) => writeLocalToVariable(key)));
 
   //If config gets updated in settings page reload everything
   browser.storage.onChanged.addListener(configUpdated);
@@ -66,13 +59,13 @@ async function loadStorageValues() {
 
 async function writeManagedToLocal(key) {
   let manval;
-  await browser.storage.managed.get(key).then(data => {manval = data[key];});
+  await browser.storage.managed.get(key).then(data => {manval = data[key]});
   await browser.storage.local.set({[key]: manval});
 }
 
 async function writeLocalToVariable(key) {
   let locval;
-  await browser.storage.local.get(key).then(data => {locval = data[key];});
+  await browser.storage.local.get(key).then(data => {locval = data[key]});
   currentSettings[key] = locval;
 }
 
